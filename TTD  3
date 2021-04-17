@@ -1,1 +1,3 @@
+pcall(function()
 game:GetService("ReplicatedStorage").Meta:FireServer("badge")
+end)
