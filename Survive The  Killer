@@ -1,0 +1,3 @@
+game:GetService("Workspace").MetaverseEvent.Keys.FeyKey.CFrame = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+wait(3)
+game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").MetaverseEvent.FeyChest.Collider.CFrame
