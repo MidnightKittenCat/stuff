@@ -1,3 +1,6 @@
+User
+Have it show advanced stats of the reactor's probing
+
 -- Import necessary modules
 local peripheral = peripheral or require("peripheral")
 
@@ -12,6 +15,7 @@ local function getReactorPeripheral()
     end
 end
 
+-- Function to probe the reactor
 -- Function to probe the reactor
 local function probeReactor(desiredTemperature, monitor)
     local reactor = getReactorPeripheral()
@@ -36,10 +40,6 @@ local function probeReactor(desiredTemperature, monitor)
             os.sleep(1)  -- Wait for a moment to stabilize
 
             local coolantLevel = reactor.getCoolantFilledPercentage()
-            local temperature = reactor.getTemperature()
-            local energyProduced = reactor.getEnergyProducedLastTick()
-            local fuelConsumed = reactor.getFuelConsumedLastTick()
-            local efficiency = energyProduced / fuelConsumed
 
             -- Update the monitor UI
             monitor.clear()
@@ -49,14 +49,6 @@ local function probeReactor(desiredTemperature, monitor)
             monitor.write(string.format("Burn Rate: %.2f MB/t", burnRate))
             monitor.setCursorPos(1, 4)
             monitor.write(string.format("Coolant Level: %.2f%%", coolantLevel * 100))
-            monitor.setCursorPos(1, 5)
-            monitor.write(string.format("Temperature: %.2f K", temperature))
-            monitor.setCursorPos(1, 6)
-            monitor.write(string.format("Energy Produced: %.2f RF/t", energyProduced))
-            monitor.setCursorPos(1, 7)
-            monitor.write(string.format("Fuel Consumed: %.2f MB/t", fuelConsumed))
-            monitor.setCursorPos(1, 8)
-            monitor.write(string.format("Efficiency: %.2f RF/MB", efficiency))
 
             -- Check if the coolant level drops below 99%
             if coolantLevel < 0.99 then
@@ -106,6 +98,8 @@ local function probeReactor(desiredTemperature, monitor)
     monitor.setCursorPos(1, 5)
     monitor.write(string.format("Last Stable Burn Rate: %.2f MB/t", lastStableBurnRate))
 end
+
+
 
 -- Function to toggle reactor status (activate or scram)
 local function toggleReactor()
