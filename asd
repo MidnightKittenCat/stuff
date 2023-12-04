@@ -24,7 +24,6 @@ local function probeReactor(desiredTemperature, monitor)
     local bestBurnRate = 0
     local bestCoolantLevel = 0
     local lastStableBurnRate = 0
-    local scramRequired = false
 
     -- Initialize the monitor UI
     monitor.clear()
@@ -37,7 +36,10 @@ local function probeReactor(desiredTemperature, monitor)
             os.sleep(1)  -- Wait for a moment to stabilize
 
             local coolantLevel = reactor.getCoolantFilledPercentage()
-            local reactorDamage = reactor.getReactorDamage()
+            local temperature = reactor.getTemperature()
+            local energyProduced = reactor.getEnergyProducedLastTick()
+            local fuelConsumed = reactor.getFuelConsumedLastTick()
+            local efficiency = energyProduced / fuelConsumed
 
             -- Update the monitor UI
             monitor.clear()
@@ -47,18 +49,14 @@ local function probeReactor(desiredTemperature, monitor)
             monitor.write(string.format("Burn Rate: %.2f MB/t", burnRate))
             monitor.setCursorPos(1, 4)
             monitor.write(string.format("Coolant Level: %.2f%%", coolantLevel * 100))
-
-            -- Check if the reactor is damaged
-            if reactorDamage > 0 then
-                monitor.setBackgroundColor(colors.red)
-                monitor.setTextColor(colors.white)
-                monitor.clear()
-                monitor.setCursorPos(1, 1)
-                monitor.write("SCRAMED")
-                monitor.setBackgroundColor(colors.black)
-                monitor.setTextColor(colors.white)
-                scramRequired = true
-            end
+            monitor.setCursorPos(1, 5)
+            monitor.write(string.format("Temperature: %.2f K", temperature))
+            monitor.setCursorPos(1, 6)
+            monitor.write(string.format("Energy Produced: %.2f RF/t", energyProduced))
+            monitor.setCursorPos(1, 7)
+            monitor.write(string.format("Fuel Consumed: %.2f MB/t", fuelConsumed))
+            monitor.setCursorPos(1, 8)
+            monitor.write(string.format("Efficiency: %.2f RF/MB", efficiency))
 
             -- Check if the coolant level drops below 99%
             if coolantLevel < 0.99 then
@@ -93,11 +91,6 @@ local function probeReactor(desiredTemperature, monitor)
         end
 
         if not success then
-            break
-        end
-
-        -- If scram is required, stop probing
-        if scramRequired then
             break
         end
     end
