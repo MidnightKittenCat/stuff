@@ -1,6 +1,3 @@
-User
-Have it show advanced stats of the reactor's probing
-
 -- Import necessary modules
 local peripheral = peripheral or require("peripheral")
 
@@ -98,7 +95,6 @@ local function probeReactor(desiredTemperature, monitor)
     monitor.setCursorPos(1, 5)
     monitor.write(string.format("Last Stable Burn Rate: %.2f MB/t", lastStableBurnRate))
 end
-
 
 
 -- Function to toggle reactor status (activate or scram)
